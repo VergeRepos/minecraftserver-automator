@@ -27,3 +27,12 @@ It supports Vanilla and Paper servers, custom server JARs, plugins, server prope
 | System Monitoring | Displays Java status and available system memory. |
 | Responsive Interface | Designed for desktop, tablet, and mobile browsers. |
 | Multiple Servers | Manage multiple independent Minecraft server instances. |
+
+---
+
+## Screenshots
+
+Screenshots can be added here once the UI is finalized.
+
+[Requirements](Requirements.md)
+
