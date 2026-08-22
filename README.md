@@ -1,39 +1,58 @@
 # Minecraft Server Automator
 
-A self-hosted web-based control panel for managing multiple Minecraft servers from a browser.
+A self-hosted, web-based control panel designed to deploy, configure, and manage multiple Minecraft server instances simultaneously from a browser.
 
-Minecraft Server Automator lets you create, configure, start, stop, restart, monitor, and manage Minecraft server instances without manually working with the command line.
-
-It supports Vanilla and Paper servers, custom server JARs, plugins, server properties, world backups, console commands, live logs, cracked/offline mode, and basic system health monitoring.
+Minecraft Server Automator eliminates the need for command-line management by providing a clean graphical interface to handle everything from vanilla installations to heavily modded instances.
 
 ---
 
-## Features
+## Quick Links
 
-| Feature | Description |
-|---|---|
-| Multi-Version Support | Fetches Minecraft versions from Mojang's official version manifest. |
-| Vanilla Support | Automatically downloads official Minecraft server JARs. |
-| Paper Support | Downloads Paper server builds for supported Minecraft versions. |
-| Custom JAR Support | Upload Forge, Fabric, Spigot, NeoForge, or other compatible server JARs. |
-| Cracked / Offline Mode | Toggle `online-mode` directly from the web interface. |
-| Plugin Management | Upload, list, and delete `.jar` plugins. |
-| Console Commands | Send commands directly to running Minecraft servers. |
-| Live Console | View recent server logs from the browser. |
-| Server Properties | Edit `server.properties` through the web UI. |
-| World Backups | Create ZIP backups of server worlds. |
-| JVM Memory Management | Automatically limits memory allocation based on available system RAM. |
-| Process Management | Start, stop, and restart servers with tracked processes. |
-| System Monitoring | Displays Java status and available system memory. |
-| Responsive Interface | Designed for desktop, tablet, and mobile browsers. |
-| Multiple Servers | Manage multiple independent Minecraft server instances. |
+**[Installation Guide](install.md)** | **[System Requirements](requirements.md)** | **[How to Use](usage.md)** | **[Project Structure](structure.md)**
+
+**[Supported Server Types](types.md)** | **[Known Issues](issues.md)** | **[Development Roadmap](roadmap.md)**
 
 ---
 
 ## Screenshots
 
-| Creating a new server | Configuring The Server |
+| Creating a New Server | Configuring Server Properties |
 | :---: | :---: |
-| <img src="https://github.com/user-attachments/assets/8cae0499-313a-405b-9a84-9c0ba13add18" width="220" alt="Creating a new server"> | <img src="https://github.com/user-attachments/assets/5ac2e512-61ce-48cf-befd-c60a6d1db6a2" width="550" alt="Configuring the server"> |
+| <img src="https://github.com" width="250" alt="Creating a new server"> | <img src="https://github.com" width="550" alt="Configuring the server"> |
 
-[Requirements](requirements.md) | [Installation](install.md) | [Project Structure](structure.md) | [Usage](usage.md) | [Server Types](types.md) | [Known Issues](issues.md) | [Roadmap](roadmap.md)
+---
+
+## Key Features
+
+### Lifecycle and Process Management
+* **Multi-Instance Support:** Deploy and run multiple independent servers simultaneously.
+* **Process Controls:** Start, stop, and restart instances safely with tracked background processes.
+* **Automated JVM Allocation:** Memory parameters auto-adjust dynamically based on available system RAM.
+
+### Engine and Mod Support
+* **Automated Downloads:** Fetches official Vanilla manifests and Paper builds dynamically.
+* **Custom JAR Uploads:** Deploy Forge, Fabric, Spigot, or NeoForge server files seamlessly.
+* **Plugin Manager:** Upload, list, and delete `.jar` plugins directly via the user interface.
+
+### Server Administration
+* **Interactive Live Console:** Read real-time stdout logs and execute terminal commands instantly.
+* **Visual Configuration Editor:** Adjust `server.properties` fields without manual file modification.
+* **Authentication Toggle:** Switch between Online and Cracked/Offline modes via the interface.
+* **Automated Backups:** Package server worlds into compressed `.zip` archives on demand.
+
+### Dashboard and Monitoring
+* **System Metrics:** Monitor local Java states and host machine memory overhead.
+* **Responsive Layout:** Interface layouts optimized for desktops, tablets, and mobile devices.
+
+---
+
+## Quick Start
+
+1. **Verify Prerequisites:** Ensure Java (matching your required Minecraft versions) and necessary system runtimes are installed. Refer to the **[System Requirements](requirements.md)**.
+2. **Clone the Repository:**
+   ```bash
+   git clone https://github.com
+   cd minecraft-server-automator
+   ```
+3. **Run the Installer:** Follow the setup steps detailed in the **[Installation Guide](install.md)** to build and launch the application.
+4. **Access the Web Interface:** Open your browser and navigate to the configured host port to begin creating servers.
