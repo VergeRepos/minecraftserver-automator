@@ -40,16 +40,12 @@ It supports Vanilla and Paper servers, custom server JARs, plugins, server prope
   <ins><strong>📚 Documentation Hub</strong></ins>
 </p>
 
-<p align="center">
-  <ins><strong>📚 Documentation Hub</strong></ins>
-</p>
-
 <div align="center">
 
 | | | |
 | :---: | :---: | :---: |
-| 📖 [Requirements](requirements.md) | 💻 [Usage Guide](usage.md) | ⚠️ [Known Issues](issues.md) |
-| 🚀 [Installation](install.md) | 🎮 [Supported Server Types](types.md) | 🗺️ [Project Roadmap](roadmap.md) |
-| 📂 [Project Structure](structure.md) | | |
+|  [Requirements](requirements.md) |  [Usage Guide](usage.md) |  [Known Issues](issues.md) |
+|  [Installation](install.md) |  [Supported Server Types](types.md) |  [Project Roadmap](roadmap.md) |
+|  [Project Structure](structure.md) | | |
 
 </div>
