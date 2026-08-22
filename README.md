@@ -40,16 +40,35 @@ It supports Vanilla and Paper servers, custom server JARs, plugins, server prope
   <ins><strong>📚 Documentation Hub</strong></ins>
 </p>
 
-<p align="center">
-  <ins><strong>📚 Documentation Hub</strong></ins>
-</p>
+<table align="center" border="0" style="border-collapse: collapse; border: none;">
+  <tr style="border: none;">
+    <td align="center" style="border: none; padding: 10px;">
+      <a href="requirements.md"><img src="https://shields.io" alt="Requirements"></a>
+    </td>
+    <td align="center" style="border: none; padding: 10px;">
+      <a href="usage.md"><img src="https://shields.io" alt="Usage"></a>
+    </td>
+    <td align="center" style="border: none; padding: 10px;">
+      <a href="issues.md"><img src="https://shields.io" alt="Known Issues"></a>
+    </td>
+  </tr>
+  <tr style="border: none;">
+    <td align="center" style="border: none; padding: 10px;">
+      <a href="install.md"><img src="https://shields.io" alt="Installation"></a>
+    </td>
+    <td align="center" style="border: none; padding: 10px;">
+      <a href="types.md"><img src="https://shields.io" alt="Server Types"></a>
+    </td>
+    <td align="center" style="border: none; padding: 10px;">
+      <a href="roadmap.md"><img src="https://shields.io" alt="Roadmap"></a>
+    </td>
+  </tr>
+  <tr style="border: none;">
+    <td align="center" style="border: none; padding: 10px;">
+      <a href="structure.md"><img src="https://shields.io" alt="Structure"></a>
+    </td>
+    <td align="center" style="border: none; padding: 10px;"></td>
+    <td align="center" style="border: none; padding: 10px;"></td>
+  </tr>
+</table>
 
-<div align="center">
-
-| | | |
-| :---: | :---: | :---: |
-| [![Requirements](https://shields.io)](requirements.md) | [![Usage](https://shields.io)](usage.md) | [![Known Issues](https://shields.io)](issues.md) |
-| [![Installation](https://shields.io)](install.md) | [![Server Types](https://shields.io)](types.md) | [![Roadmap](https://shields.io)](roadmap.md) |
-| [![Structure](https://shields.io)](structure.md) | | |
-
-</div>
