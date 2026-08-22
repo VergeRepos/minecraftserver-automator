@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+    <title>Minecraft Server Automator</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app">
+        <button id="menuToggle" aria-label="Toggle sidebar">☰</button>
+
+        <aside class="sidebar" id="sidebar">
+            <h1>⛏️ MC Automator</h1>
+            <button id="newServerBtn" class="primary-btn">+ New Server</button>
+            <div id="javaStatus" class="status-badge">Checking Java...</div>
+            <ul id="serverList"></ul>
+        </aside>
+
+        <main class="main-panel">
+            <div id="serverDetail" class="fade-in">
+                <div class="server-header">
+                    <h2 id="serverName">Select a server</h2>
+                    <div class="status-wrapper">
+                        <span class="status-dot" id="statusDot"></span>
+                        <span id="serverStatus">—</span>
+                    </div>
+                    <div class="controls">
+                        <button id="startBtn" class="action-btn start">Start</button>
+                        <button id="stopBtn" class="action-btn stop">Stop</button>
+                        <button id="restartBtn" class="action-btn restart">Restart</button>
+                        <button id="backupBtn" class="action-btn backup">Backup</button>
+                        <button id="deleteBtn" class="action-btn danger">Delete</button>
+                    </div>
+                </div>
+                <div class="info-grid">
+                    <span><strong>Version:</strong> <span id="infoVersion">—</span></span>
+                    <span><strong>Type:</strong> <span id="infoType">—</span></span>
+                    <span><strong>Port:</strong> <span id="infoPort">—</span></span>
+                    <span><strong>JVM Args:</strong> <span id="infoJvm">—</span></span>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="console">Console</button>
+                    <button class="tab-btn" data-tab="properties">Properties</button>
+                    <button class="tab-btn" data-tab="settings">Settings</button>
+                    <button class="tab-btn" data-tab="plugins">Plugins</button>
+                </div>
+
+                <!-- Console -->
+                <div id="tab-console" class="tab-content active">
+                    <div class="console">
+                        <h3>Console Log</h3>
+                        <div id="consoleOutput"><div class="loading-spinner"></div></div>
+                        <div class="command-area">
+                            <input type="text" id="commandInput" placeholder="Type a command (e.g., /say Hello)" disabled>
+                            <button id="sendCommandBtn" disabled>Send</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Properties -->
+                <div id="tab-properties" class="tab-content">
+                    <div class="properties-editor">
+                        <h3>Server Properties</h3>
+                        <div id="propertiesContainer"></div>
+                        <button id="savePropertiesBtn" class="primary-btn">Save Properties</button>
+                    </div>
+                </div>
+
+                <!-- Settings -->
+                <div id="tab-settings" class="tab-content">
+                    <div class="settings-panel">
+                        <h3>Quick Settings</h3>
+                        <div class="setting-item">
+                            <label>Server Type</label>
+                            <span id="serverTypeDisplay">—</span>
+                        </div>
+                        <div class="setting-item">
+                            <label>Cracked Mode (offline-mode)</label>
+                            <input type="checkbox" id="crackedToggle">
+                            <span id="crackedStatus">Disabled</span>
+                        </div>
+                        <button id="applySettingsBtn" class="primary-btn">Apply Settings</button>
+                        <hr>
+                        <div class="setting-item">
+                            <label>Upload Custom JAR</label>
+                            <input type="file" id="customJarInput" accept=".jar">
+                            <button id="uploadJarBtn" class="primary-btn">Upload</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plugins -->
+                <div id="tab-plugins" class="tab-content">
+                    <div class="plugins-panel">
+                        <h3>Plugins</h3>
+                        <div id="pluginList"></div>
+                        <div class="upload-area">
+                            <input type="file" id="pluginFileInput" accept=".jar">
+                            <button id="uploadPluginBtn" class="primary-btn">Upload Plugin</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div id="noServerSelected" class="fade-in">
+                <p>🎮 Select a server from the sidebar to manage it.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- New Server Modal -->
+    <div id="newServerModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Create New Server</h2>
+            <form id="newServerForm">
+                <label>Server Name:</label>
+                <input type="text" id="serverNameInput" placeholder="my-server" required>
+                <label>Version:</label>
+                <select id="versionSelect"></select>
+                <label>Server Type:</label>
+                <select id="serverTypeSelect">
+                    <option value="vanilla">Vanilla (Mojang)</option>
+                    <option value="paper">Paper</option>
+                </select>
+                <label>JVM Arguments:</label>
+                <input type="text" id="jvmArgsInput" value="-Xmx1024M -Xms1024M">
+                <label>Port:</label>
+                <input type="number" id="portInput" value="25565">
+                <button type="submit" class="primary-btn">Create</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
