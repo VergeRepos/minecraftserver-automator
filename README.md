@@ -31,13 +31,9 @@ It supports Vanilla and Paper servers, custom server JARs, plugins, server prope
 ---
 
 ## Screenshots
-Creating a new server
-<img width="537" height="715" alt="image" src="https://github.com/user-attachments/assets/8cae0499-313a-405b-9a84-9c0ba13add18" />
 
----
-Configuring The Server
-<img width="1532" height="746" alt="image" src="https://github.com/user-attachments/assets/5ac2e512-61ce-48cf-befd-c60a6d1db6a2" />
-
----
+| Creating a new server | Configuring The Server |
+| :---: | :---: |
+| <img src="https://github.com/user-attachments/assets/8cae0499-313a-405b-9a84-9c0ba13add18" width="220" alt="Creating a new server"> | <img src="https://github.com/user-attachments/assets/5ac2e512-61ce-48cf-befd-c60a6d1db6a2" width="550" alt="Configuring the server"> |
 
 [Requirements](requirements.md) | [Installation](install.md) | [Project Structure](structure.md) | [Usage](usage.md) | [Server Types](types.md) | [Known Issues](issues.md) | [Roadmap](roadmap.md)
