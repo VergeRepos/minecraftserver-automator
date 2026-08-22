@@ -1,4 +1,4 @@
-## 📂 Project Structure
+## Project Structure
 
 Below is the directory layout of a typical installation:
 
