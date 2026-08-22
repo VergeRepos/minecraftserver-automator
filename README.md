@@ -40,8 +40,5 @@ It supports Vanilla and Paper servers, custom server JARs, plugins, server prope
   <ins><strong>📚 Documentation Hub</strong></ins>
 </p>
 
-| | | |
-| :--- | :--- | :--- |
-| 📖 [Requirements](requirements.md) | 💻 [Usage Guide](usage.md) | ⚠️ [Known Issues](issues.md) |
-| 🚀 [Installation](install.md) | 🎮 [Supported Server Types](types.md) | 🗺️ [Project Roadmap](roadmap.md) |
-| 📂 [Project Structure](structure.md) | | |
+[![Requirements](https://shields.io📖_Requirements-2F3136?style=flat-square)](requirements.md) [![Installation](https://shields.io🚀_Installation-2F3136?style=flat-square)](install.md) [![Project Structure](https://shields.io📂_Structure-2F3136?style=flat-square)](structure.md) [![Usage](https://shields.io💻_Usage-2F3136?style=flat-square)](usage.md) [![Server Types](https://shields.io🎮_Server_Types-2F3136?style=flat-square)](types.md) [![Known Issues](https://shields.io⚠️_Known_Issues-2F3136?style=flat-square)](issues.md) [![Roadmap](https://shields.io🗺️_Roadmap-2F3136?style=flat-square)](roadmap.md)
+
