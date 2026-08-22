@@ -34,5 +34,5 @@ It supports Vanilla and Paper servers, custom server JARs, plugins, server prope
 
 Screenshots can be added here once the UI is finalized.
 
-[Requirements](Requirements.md) [Installation](Installation.md) [Project Structure](structure.md)
+[Requirements](Requirements.md) | [Installation](Installation.md) | [Project Structure](structure.md) | [Usage](usage.md)
 
