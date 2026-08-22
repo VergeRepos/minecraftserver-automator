@@ -37,38 +37,7 @@ It supports Vanilla and Paper servers, custom server JARs, plugins, server prope
 | <img src="https://github.com/user-attachments/assets/8cae0499-313a-405b-9a84-9c0ba13add18" width="220" alt="Creating a new server"> | <img src="https://github.com/user-attachments/assets/5ac2e512-61ce-48cf-befd-c60a6d1db6a2" width="550" alt="Configuring the server"> |
 
 <p align="center">
-  <ins><strong>📚 Documentation Hub</strong></ins>
+  <strong>📚 Documentation Hub</strong>
+  <br><br>
+  📖 [Requirements](requirements.md) &nbsp;•&nbsp; 🚀 [Installation](install.md) &nbsp;•&nbsp; 📂 [Structure](structure.md) &nbsp;•&nbsp; 💻 [Usage Guide](usage.md) &nbsp;•&nbsp; 🎮 [Server Types](types.md) &nbsp;•&nbsp; ⚠️ [Known Issues](issues.md) &nbsp;•&nbsp; 🗺️ [Roadmap](roadmap.md)
 </p>
-
-<table align="center" border="0" style="border-collapse: collapse; border: none;">
-  <tr style="border: none;">
-    <td align="center" style="border: none; padding: 10px;">
-      <a href="requirements.md"><img src="https://shields.io" alt="Requirements"></a>
-    </td>
-    <td align="center" style="border: none; padding: 10px;">
-      <a href="usage.md"><img src="https://shields.io" alt="Usage"></a>
-    </td>
-    <td align="center" style="border: none; padding: 10px;">
-      <a href="issues.md"><img src="https://shields.io" alt="Known Issues"></a>
-    </td>
-  </tr>
-  <tr style="border: none;">
-    <td align="center" style="border: none; padding: 10px;">
-      <a href="install.md"><img src="https://shields.io" alt="Installation"></a>
-    </td>
-    <td align="center" style="border: none; padding: 10px;">
-      <a href="types.md"><img src="https://shields.io" alt="Server Types"></a>
-    </td>
-    <td align="center" style="border: none; padding: 10px;">
-      <a href="roadmap.md"><img src="https://shields.io" alt="Roadmap"></a>
-    </td>
-  </tr>
-  <tr style="border: none;">
-    <td align="center" style="border: none; padding: 10px;">
-      <a href="structure.md"><img src="https://shields.io" alt="Structure"></a>
-    </td>
-    <td align="center" style="border: none; padding: 10px;"></td>
-    <td align="center" style="border: none; padding: 10px;"></td>
-  </tr>
-</table>
-
