@@ -40,6 +40,10 @@ It supports Vanilla and Paper servers, custom server JARs, plugins, server prope
   <ins><strong>📚 Documentation Hub</strong></ins>
 </p>
 
+<p align="center">
+  <ins><strong>📚 Documentation Hub</strong></ins>
+</p>
+
 <div align="center">
 
 | | | |
@@ -49,4 +53,3 @@ It supports Vanilla and Paper servers, custom server JARs, plugins, server prope
 | [![Structure](https://shields.io)](structure.md) | | |
 
 </div>
-
