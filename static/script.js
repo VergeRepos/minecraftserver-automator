@@ -47,7 +47,6 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// --- API helper ---
 async function apiFetch(url, options = {}) {
     const res = await fetch(url, {
         headers: { 'Content-Type': 'application/json' },
@@ -66,7 +65,6 @@ async function apiFetch(url, options = {}) {
     return res.json();
 }
 
-// --- Check Java ---
 async function checkJava() {
     const badge = document.getElementById('javaStatus');
     try {
@@ -85,7 +83,6 @@ async function checkJava() {
 }
 checkJava();
 
-// --- Load server list ---
 async function loadServerList() {
     try {
         const servers = await apiFetch('/api/servers');
@@ -115,7 +112,6 @@ async function loadServerList() {
     }
 }
 
-// --- Select server ---
 async function selectServer(name) {
     currentServer = name;
     document.querySelectorAll('#serverList li').forEach(li => {
@@ -128,7 +124,6 @@ async function selectServer(name) {
     startLogPolling();
 }
 
-// --- Refresh server info ---
 async function refreshServerInfo() {
     if (!currentServer) return;
     try {
@@ -149,17 +144,14 @@ async function refreshServerInfo() {
         infoType.textContent = s.server_type || 'vanilla';
         infoPort.textContent = s.port;
         infoJvm.textContent = s.jvm_args;
-        // Update command UI
         commandInput.disabled = !s.running;
         sendCommandBtn.disabled = !s.running;
-        // Update sidebar dot
         const li = document.querySelector(`#serverList li[data-name="${s.name}"]`);
         if (li) {
             const dot = li.querySelector('.status-dot');
             dot.className = `status-dot ${s.running ? 'running' : 'stopped'}`;
         }
         await loadProperties();
-        // Reload settings/plugins if those tabs are active
         if (document.getElementById('tab-settings').classList.contains('active')) {
             loadSettings();
         }
@@ -171,7 +163,6 @@ async function refreshServerInfo() {
     }
 }
 
-// --- Load properties ---
 async function loadProperties() {
     if (!currentServer) return;
     try {
@@ -191,7 +182,6 @@ async function loadProperties() {
     }
 }
 
-// --- Save properties ---
 async function saveProperties() {
     if (!currentServer) return;
     const inputs = propertiesContainer.querySelectorAll('input[data-key]');
@@ -208,7 +198,6 @@ async function saveProperties() {
     }
 }
 
-// --- Console log polling ---
 function startLogPolling() {
     if (logInterval) clearInterval(logInterval);
     fetchLogs();
@@ -226,7 +215,6 @@ async function fetchLogs() {
     }
 }
 
-// --- Server actions ---
 async function serverAction(action) {
     if (!currentServer) return;
     const btn = document.getElementById(`${action}Btn`);
@@ -276,7 +264,6 @@ deleteBtn.addEventListener('click', async () => {
 
 savePropertiesBtn.addEventListener('click', saveProperties);
 
-// --- Tab switching ---
 document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', function() {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -287,13 +274,11 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
         if (this.dataset.tab === 'plugins') loadPlugins();
         if (this.dataset.tab === 'settings') loadSettings();
         if (this.dataset.tab === 'performance') updatePerformance();
-        // Animation on switch
         const panel = document.getElementById(tabId);
         panel.animate([{opacity:0, transform:'translateY(6px)'},{opacity:1, transform:'translateY(0)'}], {duration:250, easing:'ease-out'});
     });
 });
 
-// --- Settings ---
 async function loadSettings() {
     if (!currentServer) return;
     try {
@@ -345,7 +330,6 @@ document.getElementById('uploadJarBtn').addEventListener('click', async () => {
     }
 });
 
-// --- Plugins ---
 async function loadPlugins() {
     if (!currentServer) return;
     try {
@@ -403,7 +387,6 @@ document.getElementById('uploadPluginBtn').addEventListener('click', async () =>
     }
 });
 
-// --- Send command ---
 sendCommandBtn.addEventListener('click', async () => {
     if (!currentServer) return;
     const command = commandInput.value.trim();
@@ -424,7 +407,6 @@ commandInput.addEventListener('keypress', (e) => {
     }
 });
 
-// --- Modal: New Server ---
 newServerBtn.addEventListener('click', async () => {
     modal.style.display = 'flex';
     try {
@@ -474,10 +456,8 @@ newServerForm.addEventListener('submit', async (e) => {
     }
 });
 
-// --- Initial load ---
 loadServerList();
 
-// --- Performance tab ---
 function updatePerformance() {
     const cpuEl = document.getElementById('perfCpu');
     const memEl = document.getElementById('perfMem');
@@ -490,7 +470,6 @@ function updatePerformance() {
     tpsEl.textContent = (Math.random()*18+2).toFixed(1);
 }
 
-// --- Faster refresh intervals & smoother animations ---
 setInterval(() => {
     loadServerList();
     if (currentServer) refreshServerInfo();

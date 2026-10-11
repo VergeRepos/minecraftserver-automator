@@ -87,7 +87,6 @@ class ServerInstance:
                     f.write(chunk)
             return version
         except Exception as e:
-            # If all else fails, try fallback
             print(f"Paper API error: {e}, trying fallback...")
             return self._download_paper_fallback(version)
 
@@ -95,10 +94,6 @@ class ServerInstance:
         """
         Fallback: try to download from a known working URL or instruct the user.
         """
-        # A reliable fallback: use the latest build from the official website
-        # We'll try to get the latest version and build from the API, but if the API is down,
-        # we can use a static URL like: https://api.papermc.io/v2/projects/paper/versions/1.21.3/builds/24/downloads/paper-1.21.3-24.jar
-        # However, that's not future-proof. We'll raise an error with instructions.
         raise RuntimeError(
             "Paper download failed: The PaperMC API returned 410 Gone. "
             "Please manually download the Paper JAR from https://papermc.io/downloads "
@@ -302,7 +297,6 @@ class ServerInstance:
             "created": meta.get("created", 0)
         }
 
-    # --- Plugin management ---
     def list_plugins(self):
         plugins_dir = self.base_dir / "plugins"
         if not plugins_dir.exists():
@@ -331,7 +325,6 @@ class ServerInstance:
             f.write(file_data)
         return str(jar_path)
 
-    # --- Console command ---
     def send_command(self, command):
         if not self.is_running():
             raise RuntimeError("Server is not running")

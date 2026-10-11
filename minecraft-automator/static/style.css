@@ -12,7 +12,6 @@ body {
     position: relative;
 }
 
-/* Sidebar */
 .sidebar {
     width: 280px;
     background: #2a2a3e;
@@ -39,7 +38,6 @@ body {
 .sidebar li:hover { background:#444466; transform:translateX(4px); }
 .sidebar li.active { background:#4a4a7a; border-left:4px solid #7a7aff; }
 
-/* Status dot */
 .status-dot {
     display:inline-block;
     width:12px;
@@ -59,7 +57,6 @@ body {
     100% { box-shadow: 0 0 0 0 rgba(76,175,80,0); }
 }
 
-/* Main panel */
 .main-panel {
     flex:1;
     padding:20px 30px;
@@ -84,7 +81,6 @@ body {
     to { opacity:1; transform:translateY(0); }
 }
 
-/* Server header */
 .server-header {
     display:flex;
     align-items:center;
@@ -127,7 +123,6 @@ body {
 .action-btn.backup { background:#0d47a1; }
 .action-btn.backup:hover { background:#1565c0; }
 
-/* Info grid */
 .info-grid {
     display:flex;
     flex-wrap:wrap;
@@ -138,7 +133,6 @@ body {
     margin-bottom:20px;
 }
 
-/* Tabs */
 .tabs {
     display:flex;
     gap:4px;
@@ -165,7 +159,6 @@ body {
 .tab-content { display:none; }
 .tab-content.active { display:block; }
 
-/* Console */
 .console {
     background:#0f0f1a;
     padding:15px;
@@ -200,7 +193,6 @@ body {
     100% { transform:rotate(360deg); }
 }
 
-/* Properties */
 .properties-editor {
     background:#2a2a3e;
     padding:15px;
@@ -242,7 +234,6 @@ body {
 }
 .primary-btn:hover { background:#5a9a5a; }
 
-/* Settings & Plugins */
 .settings-panel .setting-item {
     display:flex;
     align-items:center;
@@ -270,7 +261,6 @@ body {
 .plugin-item button { background:#a04040; border:none; color:white; padding:2px 10px; border-radius:4px; cursor:pointer; }
 .upload-area { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
 
-/* Command area */
 .command-area {
     margin-top: 10px;
     display: flex;
@@ -298,7 +288,6 @@ body {
     cursor: not-allowed;
 }
 
-/* Modal */
 .modal {
     display:none;
     position:fixed;
@@ -338,7 +327,6 @@ body {
 }
 .modal-content button { align-self:flex-start; }
 
-/* Mobile */
 #menuToggle {
     display:none;
     position:fixed;

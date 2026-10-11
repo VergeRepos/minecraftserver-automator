@@ -122,7 +122,6 @@ def api_delete_server(name):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# --- Plugins ---
 @app.route('/api/servers/<name>/plugins', methods=['GET'])
 def api_list_plugins(name):
     s = get_server(name)
@@ -148,7 +147,6 @@ def api_delete_plugin(name, filename):
     ok = s.delete_plugin(filename)
     return jsonify({"success": ok})
 
-# --- Custom JAR upload ---
 @app.route('/api/servers/<name>/upload_jar', methods=['POST'])
 def api_upload_jar(name):
     s = get_server(name)
@@ -161,7 +159,6 @@ def api_upload_jar(name):
     s.upload_jar(data, file.filename)
     return jsonify({"success": True})
 
-# --- Console command ---
 @app.route('/api/servers/<name>/command', methods=['POST'])
 def api_send_command(name):
     s = get_server(name)
