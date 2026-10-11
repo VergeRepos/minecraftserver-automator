@@ -3,20 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
-    <title>Minecraft Server Automator — Live Dashboard</title>
+    <title>Minecraft Server Automator</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <div class="app">
         <button id="menuToggle" aria-label="Toggle sidebar">☰</button>
-
         <aside class="sidebar" id="sidebar">
-            <h1>⛏️ MC Automator</h1>
+            <h1>MC Automator</h1>
             <button id="newServerBtn" class="primary-btn">+ New Server</button>
             <div id="javaStatus" class="status-badge">Checking Java...</div>
             <ul id="serverList"></ul>
         </aside>
-
         <main class="main-panel">
             <div id="serverDetail" class="fade-in">
                 <div class="server-header">
@@ -39,16 +37,16 @@
                     <span><strong>Port:</strong> <span id="infoPort">—</span></span>
                     <span><strong>JVM Args:</strong> <span id="infoJvm">—</span></span>
                 </div>
-
                 <div class="tabs">
                     <button class="tab-btn active" data-tab="console">Console</button>
+                    <button class="tab-btn" data-tab="files">Files</button>
                     <button class="tab-btn" data-tab="properties">Properties</button>
-                    <button class="tab-btn" data-tab="settings">Settings</button>
+                    <button class="tab-btn" data-tab="plugins">Plugins</button>
+                    <button class="tab-btn" data-tab="players">Players</button>
+                    <button class="tab-btn" data-tab="backups">Backups</button>
                     <button class="tab-btn" data-tab="performance">Performance</button>
-                <button class="tab-btn" data-tab="plugins">Plugins</button>
+                    <button class="tab-btn" data-tab="settings">Settings</button>
                 </div>
-
-                
                 <div id="tab-console" class="tab-content active">
                     <div class="console">
                         <h3>Console Log</h3>
@@ -59,8 +57,28 @@
                         </div>
                     </div>
                 </div>
-
-                
+                <div id="tab-files" class="tab-content">
+                    <div class="files-panel">
+                        <div class="files-header">
+                            <h3>File Manager</h3>
+                            <div class="file-actions">
+                                <input type="file" id="fileUploadInput" style="display:none">
+                                <button id="uploadFileBtn" class="action-btn">Upload</button>
+                                <button id="newFolderBtn" class="action-btn">New Folder</button>
+                                <button id="newFileBtn" class="action-btn">New File</button>
+                            </div>
+                        </div>
+                        <div class="breadcrumb" id="fileBreadcrumb"></div>
+                        <div id="fileList" class="file-list"></div>
+                        <div id="fileEditor" class="file-editor" style="display:none">
+                            <textarea id="fileEditorContent"></textarea>
+                            <div class="editor-actions">
+                                <button id="saveFileBtn" class="primary-btn">Save</button>
+                                <button id="cancelEditBtn" class="action-btn">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div id="tab-properties" class="tab-content">
                     <div class="properties-editor">
                         <h3>Server Properties</h3>
@@ -68,21 +86,99 @@
                         <button id="savePropertiesBtn" class="primary-btn">Save Properties</button>
                     </div>
                 </div>
-
-                
+                <div id="tab-plugins" class="tab-content">
+                    <div class="plugins-panel">
+                        <h3>Installed Plugins</h3>
+                        <div id="pluginList"></div>
+                        <div class="upload-area">
+                            <input type="file" id="pluginFileInput" accept=".jar">
+                            <button id="uploadPluginBtn" class="primary-btn">Upload Plugin</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab-players" class="tab-content">
+                    <div class="players-panel">
+                        <div class="player-section">
+                            <h3>Operators</h3>
+                            <div class="player-management">
+                                <input type="text" id="opInput" placeholder="Username">
+                                <button id="addOpBtn" class="action-btn">Add</button>
+                            </div>
+                            <div id="opList" class="player-list"></div>
+                        </div>
+                        <div class="player-section">
+                            <h3>Whitelist</h3>
+                            <div class="player-management">
+                                <input type="text" id="whitelistInput" placeholder="Username">
+                                <button id="addWhitelistBtn" class="action-btn">Add</button>
+                            </div>
+                            <div id="whitelistList" class="player-list"></div>
+                        </div>
+                        <div class="player-section">
+                            <h3>Banned Players</h3>
+                            <div class="player-management">
+                                <input type="text" id="banInput" placeholder="Username">
+                                <input type="text" id="banReasonInput" placeholder="Reason (optional)">
+                                <button id="banBtn" class="action-btn danger">Ban</button>
+                            </div>
+                            <div id="banList" class="player-list"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tab-backups" class="tab-content">
+                    <div class="backups-panel">
+                        <div class="backups-header">
+                            <h3>Backups</h3>
+                            <div class="backup-actions">
+                                <button id="createBackupBtn" class="action-btn backup">Create World Backup</button>
+                                <button id="createFullBackupBtn" class="action-btn backup">Create Full Backup</button>
+                            </div>
+                        </div>
+                        <div id="backupList" class="backup-list"></div>
+                    </div>
+                </div>
+                <div id="tab-performance" class="tab-content">
+                    <div class="performance-panel">
+                        <h3>Live Performance Metrics</h3>
+                        <div class="metrics-grid">
+                            <div class="metric-card">
+                                <div class="metric-label">CPU Load</div>
+                                <div id="perfCpu" class="metric-value">—</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">Memory</div>
+                                <div id="perfMem" class="metric-value">—</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">Uptime</div>
+                                <div id="perfUptime" class="metric-value">—</div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-label">Disk</div>
+                                <div id="perfDisk" class="metric-value">—</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div id="tab-settings" class="tab-content">
                     <div class="settings-panel">
-                        <h3>Quick Settings</h3>
+                        <h3>Server Settings</h3>
                         <div class="setting-item">
                             <label>Server Type</label>
                             <span id="serverTypeDisplay">—</span>
                         </div>
                         <div class="setting-item">
-                            <label>Cracked Mode (offline-mode)</label>
+                            <label>Offline Mode (cracked)</label>
                             <input type="checkbox" id="crackedToggle">
                             <span id="crackedStatus">Disabled</span>
                         </div>
                         <button id="applySettingsBtn" class="primary-btn">Apply Settings</button>
+                        <hr>
+                        <div class="setting-item">
+                            <label>Clone Server</label>
+                            <input type="text" id="cloneNameInput" placeholder="New server name">
+                            <button id="cloneServerBtn" class="action-btn">Clone</button>
+                        </div>
                         <hr>
                         <div class="setting-item">
                             <label>Upload Custom JAR</label>
@@ -91,56 +187,16 @@
                         </div>
                     </div>
                 </div>
-
-                
-                <div id="tab-performance" class="tab-content">
-                    <div style="padding:20px; background:linear-gradient(135deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01)); border-radius:12px; border:1px solid rgba(255,255,255,0.08);">
-                        <h3 style="margin-bottom:16px;">📊 Live Performance Metrics</h3>
-                        <div style="display:grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap:14px;">
-                            <div style="background:rgba(76,175,80,0.1); padding:14px; border-radius:10px; border:1px solid rgba(76,175,80,0.25);">
-                                <div style="font-size:0.75rem; color:#aaa; text-transform:uppercase; letter-spacing:0.5px;">CPU Load</div>
-                                <div id="perfCpu" style="font-size:1.6rem; font-weight:700; color:#4caf50;">—</div>
-                            </div>
-                            <div style="background:rgba(122,122,255,0.1); padding:14px; border-radius:10px; border:1px solid rgba(122,122,255,0.25);">
-                                <div style="font-size:0.75rem; color:#aaa; text-transform:uppercase; letter-spacing:0.5px;">Memory</div>
-                                <div id="perfMem" style="font-size:1.6rem; font-weight:700; color:#7a7aff;">—</div>
-                            </div>
-                            <div style="background:rgba(255,122,122,0.1); padding:14px; border-radius:10px; border:1px solid rgba(255,122,122,0.25);">
-                                <div style="font-size:0.75rem; color:#aaa; text-transform:uppercase; letter-spacing:0.5px;">Uptime</div>
-                                <div id="perfUptime" style="font-size:1.6rem; font-weight:700; color:#ff7a7a;">—</div>
-                            </div>
-                            <div style="background:rgba(255,209,102,0.1); padding:14px; border-radius:10px; border:1px solid rgba(255,209,102,0.25);">
-                                <div style="font-size:0.75rem; color:#aaa; text-transform:uppercase; letter-spacing:0.5px;">TPS</div>
-                                <div id="perfTps" style="font-size:1.6rem; font-weight:700; color:#ffd166;">—</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                
-                <div id="tab-plugins" class="tab-content">
-                    <div class="plugins-panel">
-                        <h3>Plugins</h3>
-                        <div id="pluginList"></div>
-                        <div class="upload-area">
-                            <input type="file" id="pluginFileInput" accept=".jar">
-                            <button id="uploadPluginBtn" class="primary-btn">Upload Plugin</button>
-                        </div>
-                    </div>
-                </div>
-
             </div>
             <div id="noServerSelected" class="fade-in">
-                <p>🎮 Select a server from the sidebar to manage it.</p>
-                <div style="margin-top:20px; padding:16px 24px; background:linear-gradient(135deg,rgba(122,122,255,0.15),rgba(255,122,122,0.1)); border-radius:12px; border:1px solid rgba(255,255,255,0.1); color:#aaa; max-width:400px; text-align:center; animation: float 3s ease-in-out infinite;">
-                    <strong style="color:#fff; font-size:1.1rem;">✨ New features active!</strong><br>
-                    <span style="font-size:0.9rem;">Live animations, faster UI, and Performance tab added.</span>
+                <p>Select a server from the sidebar to manage it.</p>
+                <div class="welcome-card">
+                    <strong>Features Active</strong><br>
+                    <span>Server control, file management, backups, player management, and performance monitoring.</span>
                 </div>
             </div>
         </main>
     </div>
-
-    
     <div id="newServerModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -154,6 +210,7 @@
                 <select id="serverTypeSelect">
                     <option value="vanilla">Vanilla (Mojang)</option>
                     <option value="paper">Paper</option>
+                    <option value="purpur">Purpur</option>
                 </select>
                 <label>JVM Arguments:</label>
                 <input type="text" id="jvmArgsInput" value="-Xmx1024M -Xms1024M">
@@ -163,7 +220,6 @@
             </form>
         </div>
     </div>
-
     <script src="/static/script.js"></script>
 </body>
 </html>

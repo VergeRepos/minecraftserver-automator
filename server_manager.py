@@ -31,21 +31,16 @@ class ServerInstance:
         except (subprocess.SubprocessError, FileNotFoundError):
             return False
     def _download_paper(self, version="latest"):
-        """
-        Download the latest available Paper build for the given version.
-        Handles 410 Gone by falling back to a direct download from the PaperMC website.
-        """
         api_url = "https://api.papermc.io/v2/projects/paper"
         headers = {"User-Agent": "Minecraft-Server-Automator/1.0"}
         try:
             resp = requests.get(api_url, headers=headers, timeout=10)
             if resp.status_code == 410:
-                print("Paper API returned 410, using fallback download...")
                 return self._download_paper_fallback(version)
             resp.raise_for_status()
             versions = resp.json()["versions"]
             if version == "latest" or version not in versions:
-                version = versions[-1]  # latest stable
+                version = versions[-1]
             builds_url = f"{api_url}/versions/{version}/builds"
             resp = requests.get(builds_url, headers=headers, timeout=10)
             if resp.status_code == 410:
@@ -78,9 +73,6 @@ class ServerInstance:
             print(f"Paper API error: {e}, trying fallback...")
             return self._download_paper_fallback(version)
     def _download_paper_fallback(self, version="latest"):
-        """
-        Fallback: try to download from a known working URL or instruct the user.
-        """
         raise RuntimeError(
             "Paper download failed: The PaperMC API returned 410 Gone. "
             "Please manually download the Paper JAR from https://papermc.io/downloads "
@@ -142,6 +134,7 @@ class ServerInstance:
             bufsize=1
         )
         meta["pid"] = self.process.pid
+        meta["started_at"] = time.time()
         self._save_meta(meta)
         import threading
         def reader():
@@ -191,7 +184,7 @@ class ServerInstance:
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 pass
         return False
-    def get_console_log(self, lines=200):
+    def get_console_log(self, lines=500):
         if not self.console_log_file.exists():
             return "No console output yet."
         try:
@@ -243,6 +236,53 @@ class ServerInstance:
         backup_file = backup_dir / f"world_{timestamp}.zip"
         shutil.make_archive(str(backup_file.with_suffix("")), 'zip', world_path)
         return str(backup_file)
+    def backup_full(self):
+        backup_dir = self.base_dir / "backups"
+        backup_dir.mkdir(exist_ok=True)
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        backup_file = backup_dir / f"full_{timestamp}.zip"
+        shutil.make_archive(str(backup_file.with_suffix("")), 'zip', str(self.base_dir), excludes=["backups", "console.log"])
+        return str(backup_file)
+    def restore_from_backup(self, backup_path):
+        if not Path(backup_path).exists():
+            raise FileNotFoundError(f"Backup file not found: {backup_path}")
+        self.stop()
+        time.sleep(1)
+        temp_dir = self.base_dir.parent / f"{self.name}_restore_temp"
+        if temp_dir.exists():
+            shutil.rmtree(str(temp_dir))
+        shutil.unpack_archive(backup_path, str(temp_dir))
+        extracted = list(temp_dir.iterdir())[0] if temp_dir.exists() else temp_dir
+        for item in extracted.iterdir():
+            dest = self.base_dir / item.name
+            if dest.exists():
+                if dest.is_dir():
+                    shutil.rmtree(str(dest))
+                else:
+                    dest.unlink()
+            shutil.move(str(item), str(dest))
+        shutil.rmtree(str(temp_dir))
+        return True
+    def list_backups(self):
+        backup_dir = self.base_dir / "backups"
+        if not backup_dir.exists():
+            return []
+        backups = []
+        for f in backup_dir.glob("*.zip"):
+            stat = f.stat()
+            backups.append({
+                "name": f.name,
+                "path": str(f),
+                "size": stat.st_size,
+                "created": stat.st_mtime
+            })
+        return sorted(backups, key=lambda x: x["created"], reverse=True)
+    def delete_backup(self, backup_path):
+        p = Path(backup_path)
+        if p.exists():
+            p.unlink()
+            return True
+        return False
     def delete(self):
         if self.is_running():
             self.stop()
@@ -252,8 +292,22 @@ class ServerInstance:
             return True
         except Exception as e:
             raise RuntimeError(f"Failed to delete server directory: {e}")
+    def clone(self, new_name, base_dir):
+        new_base = Path(base_dir) / new_name
+        if new_base.exists():
+            raise RuntimeError(f"Server directory already exists: {new_name}")
+        shutil.copytree(str(self.base_dir), str(new_base))
+        new_meta = self._load_meta()
+        new_meta["cloned_from"] = self.name
+        new_meta["cloned_at"] = time.time()
+        new_instance = ServerInstance(new_name, base_dir)
+        new_instance._save_meta(new_meta)
+        return new_instance
     def get_info(self):
         meta = self._load_meta()
+        uptime = None
+        if self.is_running() and meta.get("started_at"):
+            uptime = int(time.time() - meta["started_at"])
         return {
             "name": self.name,
             "version": meta.get("version", "unknown"),
@@ -261,7 +315,9 @@ class ServerInstance:
             "jvm_args": meta.get("jvm_args", ""),
             "port": meta.get("port", 25565),
             "running": self.is_running(),
-            "created": meta.get("created", 0)
+            "created": meta.get("created", 0),
+            "uptime": uptime,
+            "pid": meta.get("pid")
         }
     def list_plugins(self):
         plugins_dir = self.base_dir / "plugins"
@@ -295,6 +351,94 @@ class ServerInstance:
             self.process.stdin.flush()
             return True
         return False
+    def get_player_count(self):
+        log = self.get_console_log(100)
+        import re
+        patterns = [
+            r"(\d+) player",
+            r"There are (\d+) of a max",
+            r"Joined the game",
+            r"left the game"
+        ]
+        return None
+    def list_files(self, subpath="."):
+        target = (self.base_dir / subpath).resolve()
+        base = self.base_dir.resolve()
+        if not str(target).startswith(str(base) + os.sep) and target != base:
+            raise PermissionError("Access outside server directory not allowed")
+        if not target.exists():
+            return []
+        items = []
+        for item in target.iterdir():
+            rel = str(item.relative_to(self.base_dir))
+            stat = item.stat()
+            items.append({
+                "name": item.name,
+                "path": rel,
+                "is_dir": item.is_dir(),
+                "size": stat.st_size if item.is_file() else None,
+                "modified": stat.st_mtime
+            })
+        return sorted(items, key=lambda x: (x["is_dir"], x["name"]))
+    def read_file(self, filepath):
+        target = (self.base_dir / filepath).resolve()
+        base = self.base_dir.resolve()
+        if not str(target).startswith(str(base) + os.sep) and target != base:
+            raise PermissionError("Access outside server directory not allowed")
+        if not target.exists():
+            raise FileNotFoundError(f"File not found: {filepath}")
+        if target.is_dir():
+            raise IsADirectoryError(f"Path is a directory: {filepath}")
+        with open(target, "r", encoding="utf-8", errors="ignore") as f:
+            return f.read()
+    def write_file(self, filepath, content):
+        target = (self.base_dir / filepath).resolve()
+        base = self.base_dir.resolve()
+        if not str(target).startswith(str(base) + os.sep) and target != base:
+            raise PermissionError("Access outside server directory not allowed")
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with open(target, "w", encoding="utf-8") as f:
+            f.write(content)
+        return True
+    def create_directory(self, path):
+        target = (self.base_dir / path).resolve()
+        base = self.base_dir.resolve()
+        if not str(target).startswith(str(base) + os.sep) and target != base:
+            raise PermissionError("Access outside server directory not allowed")
+        target.mkdir(parents=True, exist_ok=True)
+        return True
+    def delete_file(self, filepath):
+        target = (self.base_dir / filepath).resolve()
+        base = self.base_dir.resolve()
+        if not str(target).startswith(str(base) + os.sep) and target != base:
+            raise PermissionError("Access outside server directory not allowed")
+        if not target.exists():
+            raise FileNotFoundError(f"File not found: {filepath}")
+        if target.is_dir():
+            shutil.rmtree(str(target))
+        else:
+            target.unlink()
+        return True
+    def move_file(self, src, dst):
+        src_target = (self.base_dir / src).resolve()
+        dst_target = (self.base_dir / dst).resolve()
+        base = self.base_dir.resolve()
+        if not str(src_target).startswith(str(base) + os.sep) and src_target != base:
+            raise PermissionError("Source outside server directory")
+        if not str(dst_target).startswith(str(base) + os.sep) and dst_target != base:
+            raise PermissionError("Destination outside server directory")
+        dst_target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(src_target), str(dst_target))
+        return True
+    def download_file(self, filepath):
+        target = (self.base_dir / filepath).resolve()
+        base = self.base_dir.resolve()
+        if not str(target).startswith(str(base) + os.sep) and target != base:
+            raise PermissionError("Access outside server directory not allowed")
+        if not target.exists():
+            raise FileNotFoundError(f"File not found: {filepath}")
+        with open(target, "rb") as f:
+            return f.read()
 def list_servers(base_dir):
     base = Path(base_dir)
     if not base.exists():

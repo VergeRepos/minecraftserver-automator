@@ -1,0 +1,18 @@
+[
+  {
+    "timestamp": 1791738739.915515,
+    "action": "server_create",
+    "details": {
+      "name": "tuff",
+      "version": "1.21.11",
+      "type": "vanilla"
+    }
+  },
+  {
+    "timestamp": 1791738762.4875934,
+    "action": "server_delete",
+    "details": {
+      "name": "tuff"
+    }
+  }
+]
