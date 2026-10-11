@@ -2,9 +2,13 @@ from flask import Flask, request, jsonify, render_template
 import os
 import json
 import subprocess
+from pathlib import Path
 from server_manager import ServerInstance, list_servers
 from version_fetcher import fetch_versions, fetch_paper_builds, download_server_jar
 import psutil
+
+from plugin_library import PluginLibrary
+from plugin_inventory import list_server_plugins
 
 app = Flask(__name__)
 
@@ -141,6 +145,36 @@ def api_upload_plugin(name):
     data = file.read()
     s.upload_plugin(data, file.filename)
     return jsonify({"success": True, "filename": file.filename})
+
+@app.route('/api/servers/<name>/plugin_inventory', methods=['GET'])
+def api_plugin_inventory(name):
+    s = get_server(name)
+    inventory = list_server_plugins(os.path.join(SERVERS_DIR, name))
+    return jsonify({"installed": inventory})
+
+@app.route('/api/servers/<name>/plugin_install', methods=['POST'])
+def api_plugin_install(name):
+    s = get_server(name)
+    data = request.json or {}
+    manifest_path = data.get("manifest_path")
+    if not manifest_path or not os.path.exists(manifest_path):
+        return jsonify({"error": "manifest_path required and must exist"}), 400
+    lib = PluginLibrary()
+    ok, errs = lib.install_plugin(Path(SERVERS_DIR) / name, Path(manifest_path))
+    if not ok:
+        return jsonify({"error": errs}), 400
+    return jsonify({"success": True})
+
+@app.route('/api/servers/<name>/plugin_rollback', methods=['POST'])
+def api_plugin_rollback(name):
+    s = get_server(name)
+    data = request.json or {}
+    plugin_id = data.get("plugin_id")
+    if not plugin_id:
+        return jsonify({"error": "plugin_id required"}), 400
+    lib = PluginLibrary()
+    ok, errs = lib.rollback_plugin(Path(SERVERS_DIR) / name, plugin_id)
+    return jsonify({"success": ok, "errors": errs})
 
 @app.route('/api/servers/<name>/plugins/<filename>', methods=['DELETE'])
 def api_delete_plugin(name, filename):

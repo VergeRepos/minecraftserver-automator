@@ -1,0 +1,2 @@
+- [Repo Architecture](memory/repo-architecture-summary.md) — architecture + planned changes
+- [Plugin Library Implementation](memory/plugin-library-implementation.md) — implemented feature + limitations
