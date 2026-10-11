@@ -1,6 +1,8 @@
 import requests
 
 MANIFEST_URL = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
+PAPER_API = "https://api.papermc.io/v2/projects/paper"
+
 
 def fetch_versions():
     try:
@@ -8,35 +10,65 @@ def fetch_versions():
         resp.raise_for_status()
         data = resp.json()
         versions = []
-        for v in data["versions"]:
+        for v in data.get("versions", []):
             versions.append({
                 "id": v["id"],
-                "type": v["type"],
-                "url": v["url"],
-                "releaseTime": v["releaseTime"]
+                "type": v.get("type", "release"),
+                "url": v.get("url"),
+                "releaseTime": v.get("releaseTime")
             })
-        versions.sort(key=lambda x: x["releaseTime"], reverse=True)
+        versions.sort(key=lambda x: x.get("releaseTime") or "", reverse=True)
         return versions
     except Exception as e:
         print(f"Error fetching versions: {e}")
         return []
 
-def download_server_jar(version_id, dest_path):
+
+def fetch_paper_builds(version_id):
+    try:
+        url = f"{PAPER_API}/versions/{version_id}/builds"
+        resp = requests.get(url, timeout=10)
+        resp.raise_for_status()
+        return resp.json().get("builds", [])
+    except Exception as e:
+        print(f"Paper fetch error: {e}")
+        return []
+
+
+def download_server_jar(version_id, dest_path, server_type="vanilla"):
+    if server_type == "paper":
+        builds = fetch_paper_builds(version_id)
+        if not builds:
+            raise ValueError("No Paper builds available for version " + version_id)
+        latest = builds[-1]
+        build_num = latest.get("build")
+        url = f"{PAPER_API}/versions/{version_id}/builds/{build_num}/downloads/application"
+        r = requests.get(url, stream=True, timeout=30)
+        r.raise_for_status()
+        with open(dest_path, "wb") as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                if chunk:
+                    f.write(chunk)
+        return dest_path
+
     versions = fetch_versions()
     detail_url = None
     for v in versions:
-        if v["id"] == version_id:
-            detail_url = v["url"]
+        if v.get("id") == version_id:
+            detail_url = v.get("url")
             break
     if not detail_url:
         raise ValueError(f"Version {version_id} not found")
     detail_resp = requests.get(detail_url, timeout=10)
     detail_resp.raise_for_status()
     detail = detail_resp.json()
-    server_url = detail["downloads"]["server"]["url"]
-    r = requests.get(server_url, stream=True)
+    server_url = detail.get("downloads", {}).get("server", {}).get("url")
+    if not server_url:
+        raise ValueError("No server download URL found")
+    r = requests.get(server_url, stream=True, timeout=30)
     r.raise_for_status()
     with open(dest_path, "wb") as f:
         for chunk in r.iter_content(chunk_size=8192):
-            f.write(chunk)
+            if chunk:
+                f.write(chunk)
     return dest_path

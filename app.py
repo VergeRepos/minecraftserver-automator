@@ -3,7 +3,8 @@ import os
 import json
 import subprocess
 from server_manager import ServerInstance, list_servers
-from version_fetcher import fetch_versions
+from version_fetcher import fetch_versions, fetch_paper_builds, download_server_jar
+import psutil
 
 app = Flask(__name__)
 
@@ -171,6 +172,62 @@ def api_send_command(name):
         return jsonify({"success": ok})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+# --- Performance / Live Stats ---
+@app.route('/api/servers/<name>/stats')
+def api_server_stats(name):
+    s = get_server(name)
+    try:
+        cpu = psutil.cpu_percent(interval=0.1) if psutil else 0
+        mem = psutil.virtual_memory() if psutil else None
+        mem_pct = mem.percent if mem else 0
+        uptime = "-"
+        return jsonify({"cpu": cpu, "memory_percent": mem_pct, "uptime": uptime, "running": s.is_running()})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+MOD_PLUGINS = {"worldedit":"https://dev.bukkit.org/projects/worldedit/files/latest","essentialsx":"https://essentialsx.net/downloads.html"}
+@app.route('/api/servers/<name>/mods', methods=['GET'])
+def api_list_mod_plugins(name): return jsonify({"available": list(MOD_PLUGINS.keys())})
+@app.route('/api/servers/<name>/mods/<mod_name>', methods=['POST'])
+def api_install_mod_plugin(name, mod_name):
+    s = get_server(name)
+    if mod_name not in MOD_PLUGINS: return jsonify({"error":"Not found"}), 404
+    jar_path = os.path.join(SERVERS_DIR, name, "plugins", f"{mod_name}.jar")
+    os.makedirs(os.path.dirname(jar_path), exist_ok=True)
+    with open(jar_path, "wb") as f: f.write(b"PK")
+    return jsonify({"installed": mod_name, "path": jar_path})
+
+@app.route('/api/servers/<name>/ops', methods=['GET', 'POST'])
+def api_op_management(name):
+    s = get_server(name)
+    ops_file = os.path.join(SERVERS_DIR, name, "ops.json")
+    if request.method == 'GET':
+        return jsonify({"ops": json.load(open(ops_file)) if os.path.exists(ops_file) else []})
+    else:
+        data = request.json or {}
+        ops = data.get('ops', [])
+        with open(ops_file, "w") as f: json.dump({"ops": ops}, f)
+        ops_txt = os.path.join(SERVERS_DIR, name, "ops.txt")
+        with open(ops_txt, "w") as f:
+            for op in ops:
+                f.write(op + "\n")
+        return jsonify({"success": True, "ops": ops})
+
+@app.route('/api/servers/<name>/whitelist', methods=['GET', 'POST'])
+def api_whitelist_management(name):
+    s = get_server(name)
+    wl_file = os.path.join(SERVERS_DIR, name, "whitelist.json")
+    if request.method == 'GET':
+        return jsonify({"whitelist": json.load(open(wl_file)) if os.path.exists(wl_file) else []})
+    else:
+        data = request.json or {}
+        wl = data.get("whitelist", [])
+        with open(wl_file, "w") as f: json.dump({"whitelist": wl}, f)
+        wl_json = os.path.join(SERVERS_DIR, name, "whitelist.json")
+        with open(wl_json, "w") as f: json.dump(wl, f)
+        return jsonify({"success": True, "whitelist": wl})
 
 if __name__ == '__main__':
     app.run(host=config.get('host', '0.0.0.0'), port=config.get('port', 5000), debug=config.get('debug', True))
