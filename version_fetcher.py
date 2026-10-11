@@ -1,7 +1,6 @@
 import requests
 MANIFEST_URL = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
 PAPER_API = "https://api.papermc.io/v2/projects/paper"
-
 def fetch_versions():
     try:
         resp = requests.get(MANIFEST_URL, timeout=10)
@@ -15,7 +14,6 @@ def fetch_versions():
     except Exception as e:
         print("Error fetching versions:", e)
         return []
-
 def fetch_paper_builds(version_id):
     try:
         url = f"{PAPER_API}/versions/{version_id}/builds"
@@ -25,7 +23,6 @@ def fetch_paper_builds(version_id):
     except Exception as e:
         print("Paper fetch error:", e)
         return []
-
 def download_server_jar(version_id, dest_path, server_type="vanilla"):
     if server_type == "paper":
         builds = fetch_paper_builds(version_id)
