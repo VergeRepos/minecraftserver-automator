@@ -1,0 +1,6 @@
+{
+    "servers_dir": "./servers",
+    "host": "0.0.0.0",
+    "port": 5000,
+    "debug": true
+}
